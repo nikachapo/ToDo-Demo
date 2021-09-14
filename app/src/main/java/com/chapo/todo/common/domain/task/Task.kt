@@ -1,4 +1,4 @@
-package com.chapo.todo.common.task
+package com.chapo.todo.common.domain.task
 
 class Task(
     val id: String,

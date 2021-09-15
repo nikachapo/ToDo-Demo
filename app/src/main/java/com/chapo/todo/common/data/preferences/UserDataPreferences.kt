@@ -3,6 +3,7 @@ package com.chapo.todo.common.data.preferences
 import android.content.Context
 import com.chapo.todo.common.domain.user.User
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.IOException
 import javax.inject.Inject
@@ -13,7 +14,7 @@ class UserDataPreferences @Inject constructor(
     @ApplicationContext context: Context
 ) : Preferences<User> {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
     private val sharedPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
 

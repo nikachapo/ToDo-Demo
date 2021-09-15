@@ -17,8 +17,8 @@ class TokenPreferences @Inject constructor(
 
     }
 
-    override fun getValue(): String {
-        return sharedPreferences.getString(KEY_TOKEN, "").orEmpty()
+    override fun getValue(): String? {
+        return sharedPreferences.getString(KEY_TOKEN, null)
     }
 
     override fun clearValue() {

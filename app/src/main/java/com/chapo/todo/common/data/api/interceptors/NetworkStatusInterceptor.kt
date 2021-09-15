@@ -1,6 +1,6 @@
 package com.chapo.todo.common.data.api.interceptors
 
-import com.chapo.todo.common.NetworkUnavailableException
+import com.chapo.todo.common.domain.NetworkUnavailableException
 import com.chapo.todo.common.data.api.ConnectionManager
 import okhttp3.Interceptor
 import okhttp3.Response

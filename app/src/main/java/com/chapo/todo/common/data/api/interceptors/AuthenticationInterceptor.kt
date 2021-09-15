@@ -8,10 +8,10 @@ import com.chapo.todo.common.data.ApiParameters.EMAIL_KEY
 import com.chapo.todo.common.data.ApiParameters.PASSWORD_KEY
 import com.chapo.todo.common.data.ApiParameters.TOKEN_TYPE
 import com.chapo.todo.common.data.api.model.ApiAuthenticatedUser
-import com.chapo.todo.common.data.api.model.ApiToken
 import com.chapo.todo.common.data.di.Token
 import com.chapo.todo.common.data.di.UserData
 import com.chapo.todo.common.data.preferences.Preferences
+import com.chapo.todo.common.domain.UnauthorizedException
 import com.chapo.todo.common.domain.user.User
 import com.squareup.moshi.Moshi
 import okhttp3.*
@@ -34,10 +34,10 @@ class AuthenticationInterceptor @Inject constructor(
             chain.createAuthenticatedRequest(token)
         } else {
             val tokenRefreshResponse = chain.refreshToken()
-            if (tokenRefreshResponse?.isSuccessful == null) {
-                val newToken = mapToken(tokenRefreshResponse!!)
+            if (tokenRefreshResponse?.isSuccessful != null) {
+                val newToken = mapToken(tokenRefreshResponse)
                 storeNewToken(newToken)
-                chain.createAuthenticatedRequest(newToken.value)
+                chain.createAuthenticatedRequest(newToken)
             } else {
                 request
             }
@@ -81,22 +81,24 @@ class AuthenticationInterceptor @Inject constructor(
 
         if (response.code == UNAUTHORIZED) {
             tokenPreferences.clearValue()
+            throw UnauthorizedException()
         }
 
         return response
     }
 
-    private fun mapToken(tokenRefreshResponse: Response): ApiToken {
+    private fun mapToken(tokenRefreshResponse: Response): String {
         val moshi = Moshi.Builder().build()
         val userAdapter = moshi.adapter(ApiAuthenticatedUser::class.java)
         val responseBody = tokenRefreshResponse.body!! // if successful, this should be good :]
 
-        return userAdapter.fromJson(responseBody.string())?.token ?: ApiToken(ApiToken.INVALID)
+        return userAdapter.fromJson(responseBody.string())?.token
+            ?: ApiAuthenticatedUser.INVALID_TOKEN
     }
 
-    private fun storeNewToken(apiToken: ApiToken) {
+    private fun storeNewToken(apiToken: String) {
         with(tokenPreferences) {
-            putValue(apiToken.value)
+            putValue(apiToken)
         }
     }
 }

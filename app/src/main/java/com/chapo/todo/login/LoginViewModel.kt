@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chapo.todo.common.domain.NetworkException
+import com.chapo.todo.common.domain.NetworkUnavailableException
 import com.chapo.todo.login.domain.model.LoginParameters
 import com.chapo.todo.login.domain.usecases.CheckIfLoggedInUseCase
 import com.chapo.todo.login.domain.usecases.LoginUseCase
@@ -35,14 +36,18 @@ class LoginViewModel @Inject constructor(
                 loginUseCase(LoginParameters(email, password))
                 LoginSuccess
             } catch (e: NetworkException) {
-                LoginError
+                e.message?.let { LoginError(if (e.code == CODE_NOT_REGISTERED) "Not registered" else it) }
+            } catch (e: NetworkUnavailableException) {
+                e.message?.let { LoginError(it) }
             }
         }
     }
 
 }
 
+private const val CODE_NOT_REGISTERED = 400
+
 sealed class LoginViewState
 object Loading : LoginViewState()
 object LoginSuccess : LoginViewState()
-object LoginError : LoginViewState()
+data class LoginError(val message: String) : LoginViewState()

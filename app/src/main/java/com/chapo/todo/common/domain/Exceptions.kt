@@ -8,4 +8,4 @@ class UnauthorizedException(message: String = "Session expired"): IOException(me
 
 class UserAlreadyRegisteredException(message: String = "User already registered"): IOException(message)
 
-class NetworkException(message: String): Exception(message)
+class NetworkException(message: String, val code: Int): Exception(message)

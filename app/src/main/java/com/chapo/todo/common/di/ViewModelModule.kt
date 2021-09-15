@@ -12,7 +12,7 @@ import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
 @InstallIn(ViewModelComponent::class)
-abstract class ActivityRetainedModule {
+abstract class ViewModelModule {
 
   @Binds
   @ViewModelScoped

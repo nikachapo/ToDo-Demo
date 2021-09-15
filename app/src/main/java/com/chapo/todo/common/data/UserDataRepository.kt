@@ -10,6 +10,8 @@ import com.chapo.todo.common.domain.repositories.UserRepository
 import com.chapo.todo.common.domain.user.User
 import com.chapo.todo.common.utils.DispatchersProvider
 import com.chapo.todo.login.domain.model.LoginParameters
+import com.chapo.todo.registration.domain.model.CheckIfRegisteredParameters
+import com.chapo.todo.registration.domain.model.RegisterUserParameters
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import javax.inject.Inject
@@ -28,9 +30,15 @@ class UserDataRepository @Inject constructor(
             try {
                 val authenticatedUser = toDoApi.login(loginParameters)
                 tokenPreferences.putValue(authenticatedUser.token)
-                userPreferences.putValue(userMapper.mapToDomain(authenticatedUser.user))
+                userPreferences.putValue(
+                    userMapper.mapToDomain(authenticatedUser.user)
+                        .copy(password = loginParameters.password)
+                )
             } catch (exception: HttpException) {
-                throw NetworkException(exception.message ?: "Code ${exception.code()}")
+                throw NetworkException(
+                    exception.message ?: "Code ${exception.code()}",
+                    exception.code()
+                )
             }
         }
     }
@@ -41,4 +49,41 @@ class UserDataRepository @Inject constructor(
         }
     }
 
+    @Throws(NetworkException::class)
+    override suspend fun isRegistered(parameters: CheckIfRegisteredParameters): Boolean {
+        return withContext(dispatchersProvider.io()) {
+            try {
+                toDoApi.login(LoginParameters(parameters.email, parameters.password))
+                true
+            } catch (exception: HttpException) {
+                if (exception.code() == 400) {
+                    false
+                } else {
+                    throw NetworkException(
+                        exception.message ?: "Code ${exception.code()}",
+                        exception.code()
+                    )
+                }
+            }
+        }
+    }
+
+    @Throws(NetworkException::class)
+    override suspend fun registerUser(parameters: RegisterUserParameters) {
+        withContext(dispatchersProvider.io()) {
+            try {
+                val authenticatedUser = toDoApi.register(parameters)
+                tokenPreferences.putValue(authenticatedUser.token)
+                userPreferences.putValue(
+                    userMapper.mapToDomain(authenticatedUser.user)
+                        .copy(password = parameters.password)
+                )
+            } catch (exception: HttpException) {
+                throw NetworkException(
+                    exception.message ?: "Code ${exception.code()}",
+                    exception.code()
+                )
+            }
+        }
+    }
 }

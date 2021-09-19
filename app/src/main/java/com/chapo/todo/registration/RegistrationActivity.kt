@@ -1,15 +1,14 @@
 package com.chapo.todo.registration
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import com.chapo.todo.MainActivity
 import com.chapo.todo.R
 import com.chapo.todo.common.utils.showToast
 import com.chapo.todo.databinding.ActivityRegistrationBinding
-import com.chapo.todo.registration.enterdetails.EnterDetailsFragment
+import com.chapo.todo.registration.uploadpicture.UploadPictureFragment
+import com.chapo.todo.registration.welcome.WelcomeFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,15 +22,15 @@ class RegistrationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_holder, EnterDetailsFragment())
-            .commit()
+        replaceFragment(Step.UploadPicture)
+        registrationViewModel.step.observe(this, {
+            replaceFragment(it)
+        })
 
         registrationViewModel.registrationState.observe(this, {
-            when(it) {
+            when (it) {
                 is RegistrationState.Success -> {
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
+                    showToast("User registered successfully :]")
                 }
                 is RegistrationState.Error -> {
                     binding.fragmentHolder.isVisible = true
@@ -46,16 +45,20 @@ class RegistrationActivity : AppCompatActivity() {
         })
     }
 
+    private fun replaceFragment(step: Step) {
+        val fragment = when (step) {
+            Step.EnterDetails -> UploadPictureFragment()
+            Step.UploadPicture -> UploadPictureFragment()
+            Step.Welcome -> WelcomeFragment()
+        }
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_holder, fragment)
+            .commit()
+    }
+
     fun onValidationChecked() {
         registrationViewModel.registerUser()
     }
-
-//    fun onDetailsEntered() {
-//        supportFragmentManager.beginTransaction()
-//            .replace(R.id.fragment_holder, TermsAndConditionsFragment())
-//            .addToBackStack(TermsAndConditionsFragment::class.java.simpleName)
-//            .commit()
-//    }
 
     override fun onBackPressed() {
         if (supportFragmentManager.backStackEntryCount > 0) {

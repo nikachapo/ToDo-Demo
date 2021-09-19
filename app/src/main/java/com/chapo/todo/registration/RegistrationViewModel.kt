@@ -17,6 +17,9 @@ class RegistrationViewModel @Inject constructor(
     private val registerUserUseCase: RegisterUserUseCase
 ) : ViewModel() {
 
+    private val _step = MutableLiveData<Step>()
+    val step: LiveData<Step> = _step
+
     private val _registrationState = MutableLiveData<RegistrationState>()
     val registrationState: LiveData<RegistrationState> = _registrationState
 
@@ -39,6 +42,7 @@ class RegistrationViewModel @Inject constructor(
                 try {
                     registerUserUseCase(RegisterUserParameters(name!!, email!!, password!!, age!!))
                     _registrationState.value = RegistrationState.Success
+                    _step.value = Step.UploadPicture
                 } catch (e: NetworkException) {
                     e.message?.let {
                         _registrationState.value =
@@ -53,10 +57,16 @@ class RegistrationViewModel @Inject constructor(
         }
     }
 
+    fun moveTo(step: Step) {
+        _step.value = step
+    }
+
     companion object {
         private const val CODE_ALREADY_REGISTERED = 400
     }
 }
+
+enum class Step { EnterDetails, UploadPicture, Welcome }
 
 sealed class RegistrationState {
     object Loading : RegistrationState()

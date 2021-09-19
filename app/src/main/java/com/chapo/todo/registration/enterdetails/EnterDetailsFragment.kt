@@ -53,6 +53,11 @@ class EnterDetailsFragment : Fragment() {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
     private fun setupViews() {
         binding.etName.doOnTextChanged { _, _, _, _ -> hideError() }
         binding.etAge.doOnTextChanged { _, _, _, _ -> hideError() }

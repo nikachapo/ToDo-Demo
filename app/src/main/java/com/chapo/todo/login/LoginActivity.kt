@@ -7,8 +7,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
-import com.chapo.todo.MainActivity
 import com.chapo.todo.common.utils.hideKeyboard
+import com.chapo.todo.tasks.TasksActivity
 import com.chapo.todo.databinding.ActivityLoginBinding
 import com.chapo.todo.registration.RegistrationActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,7 +33,7 @@ class LoginActivity : AppCompatActivity() {
             binding.progressBar.isVisible = state is Loading
             when (state) {
                 LoginSuccess -> {
-                    startActivity(Intent(this, MainActivity::class.java))
+                    startActivity(Intent(this, TasksActivity::class.java))
                     finish()
                 }
                 is LoginError -> {

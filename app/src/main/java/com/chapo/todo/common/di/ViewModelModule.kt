@@ -1,6 +1,8 @@
 package com.chapo.todo.common.di
 
+import com.chapo.todo.common.data.TasksDataRepository
 import com.chapo.todo.common.data.UserDataRepository
+import com.chapo.todo.common.domain.repositories.TasksRepository
 import com.chapo.todo.common.domain.repositories.UserRepository
 import com.chapo.todo.common.utils.CoroutineDispatchersProvider
 import com.chapo.todo.common.utils.DispatchersProvider
@@ -14,12 +16,15 @@ import dagger.hilt.android.scopes.ViewModelScoped
 @InstallIn(ViewModelComponent::class)
 abstract class ViewModelModule {
 
-  @Binds
-  @ViewModelScoped
-  abstract fun bindUserRepository(repository: UserDataRepository): UserRepository
+    @Binds
+    @ViewModelScoped
+    abstract fun bindUserRepository(repository: UserDataRepository): UserRepository
 
-  @Binds
-  abstract fun bindDispatchersProvider(dispatchersProvider: CoroutineDispatchersProvider):
-          DispatchersProvider
+    @Binds
+    @ViewModelScoped
+    abstract fun bindTasksRepo(repository: TasksDataRepository): TasksRepository
 
+    @Binds
+    abstract fun bindDispatchersProvider(dispatchersProvider: CoroutineDispatchersProvider):
+            DispatchersProvider
 }

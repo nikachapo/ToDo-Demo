@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.chapo.todo.MainActivity
+import com.chapo.todo.tasks.TasksActivity
 import com.chapo.todo.databinding.WelcomeFragmentBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -28,7 +28,7 @@ class WelcomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btFinish.setOnClickListener {
-            requireActivity().startActivity(Intent(requireActivity(), MainActivity::class.java))
+            requireActivity().startActivity(Intent(requireActivity(), TasksActivity::class.java))
             requireActivity().finish()
         }
     }

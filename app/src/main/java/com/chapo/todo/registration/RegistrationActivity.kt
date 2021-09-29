@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import com.chapo.todo.R
 import com.chapo.todo.common.utils.showToast
 import com.chapo.todo.databinding.ActivityRegistrationBinding
+import com.chapo.todo.registration.enterdetails.EnterDetailsFragment
 import com.chapo.todo.registration.uploadpicture.UploadPictureFragment
 import com.chapo.todo.registration.welcome.WelcomeFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,7 +23,6 @@ class RegistrationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        replaceFragment(Step.UploadPicture)
         registrationViewModel.step.observe(this, {
             replaceFragment(it)
         })
@@ -47,7 +47,7 @@ class RegistrationActivity : AppCompatActivity() {
 
     private fun replaceFragment(step: Step) {
         val fragment = when (step) {
-            Step.EnterDetails -> UploadPictureFragment()
+            Step.EnterDetails -> EnterDetailsFragment()
             Step.UploadPicture -> UploadPictureFragment()
             Step.Welcome -> WelcomeFragment()
         }

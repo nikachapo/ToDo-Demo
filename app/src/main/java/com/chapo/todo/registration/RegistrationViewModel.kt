@@ -17,7 +17,7 @@ class RegistrationViewModel @Inject constructor(
     private val registerUserUseCase: RegisterUserUseCase
 ) : ViewModel() {
 
-    private val _step = MutableLiveData<Step>()
+    private val _step = MutableLiveData(Step.EnterDetails)
     val step: LiveData<Step> = _step
 
     private val _registrationState = MutableLiveData<RegistrationState>()

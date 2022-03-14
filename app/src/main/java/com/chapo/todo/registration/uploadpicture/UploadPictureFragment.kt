@@ -11,6 +11,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import com.chapo.todo.common.di.FragmentPermission
 import com.chapo.todo.common.utils.permissions.PermissionManager
 import com.chapo.todo.databinding.UploadPictureFragmentBinding
 import com.chapo.todo.registration.RegistrationViewModel
@@ -29,6 +30,7 @@ class UploadPictureFragment : Fragment() {
     private val binding get() = _binding!!
 
     @Inject
+    @FragmentPermission
     lateinit var permissionManager: PermissionManager
 
     private var pictureUri: Uri? = null

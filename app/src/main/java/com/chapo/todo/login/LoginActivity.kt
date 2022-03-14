@@ -7,11 +7,15 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
+import com.chapo.todo.common.di.ActivityPermission
+import com.chapo.todo.common.di.FragmentPermission
 import com.chapo.todo.common.utils.hideKeyboard
+import com.chapo.todo.common.utils.permissions.PermissionManager
 import com.chapo.todo.tasks.TasksActivity
 import com.chapo.todo.databinding.ActivityLoginBinding
 import com.chapo.todo.registration.RegistrationActivity
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
@@ -19,6 +23,10 @@ class LoginActivity : AppCompatActivity() {
     private val loginViewModel: LoginViewModel by viewModels()
 
     private lateinit var binding: ActivityLoginBinding
+
+    @ActivityPermission
+    @Inject
+    lateinit var permissionManager: PermissionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -8,13 +8,20 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import com.chapo.todo.common.di.FragmentPermission
+import com.chapo.todo.common.utils.permissions.PermissionManager
 import com.chapo.todo.databinding.EnterDetailsFragmentBinding
 import com.chapo.todo.registration.RegistrationActivity
 import com.chapo.todo.registration.RegistrationViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class EnterDetailsFragment : Fragment() {
+
+//    @FragmentPermission
+//    @Inject
+//    lateinit var permissionManager: PermissionManager
 
     private val registrationViewModel: RegistrationViewModel by activityViewModels()
 
